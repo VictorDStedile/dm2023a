@@ -7,10 +7,11 @@ require("rpart")
 require("rpart.plot")
 
 #Aqui se debe poner la carpeta de la materia de SU computadora local
-setwd("X:\\gdrive\\ITBA2023a\\")  #Establezco el Working Directory
+setwd("C:\\Users\\victo\\OneDrive\\Escritorio\\Maestría_Data_Science\\Modulo_2_Mineria_datos\\datasets")  #Establezco el Working Directory
+
 
 #cargo el dataset
-dataset  <- fread("./datasets/dataset_pequeno.csv")
+dataset  <- fread("C:\\Users\\victo\\OneDrive\\Escritorio\\Maestría_Data_Science\\Modulo_2_Mineria_datos\\datasets\\dataset_pequeno.csv")
 
 dtrain  <- dataset[ foto_mes==202107 ]  #defino donde voy a entrenar
 dapply  <- dataset[ foto_mes==202109 ]  #defino donde voy a aplicar el modelo
@@ -20,9 +21,9 @@ modelo  <- rpart(formula=   "clase_ternaria ~ .",  #quiero predecir clase_ternar
                  data=      dtrain,  #los datos donde voy a entrenar
                  xval=      0,
                  cp=       -1,     #esto significa no limitar la complejidad de los splits
-                 minsplit=  0,     #minima cantidad de registros para que se haga el split
-                 minbucket= 1,     #tamaño minimo de una hoja
-                 maxdepth=  3 )    #profundidad maxima del arbol
+                 minsplit=  400,     #minima cantidad de registros para que se haga el split
+                 minbucket= 3,     #tamaño minimo de una hoja
+                 maxdepth=  10 )    #profundidad maxima del arbol
 
 
 #grafico el arbol
@@ -45,9 +46,9 @@ dapply[ , Predicted := as.numeric( prob_baja2 > 1/40 ) ]
 
 #genero el archivo para Kaggle
 #primero creo la carpeta donde va el experimento
-dir.create( "./exp/" )
-dir.create( "./exp/KA2001" )
+dir.create("C:\\Users\\victo\\OneDrive\\Escritorio\\Maestría_Data_Science\\Modulo_2_Mineria_datos\\exp" )
+dir.create( "C:\\Users\\victo\\OneDrive\\Escritorio\\Maestría_Data_Science\\Modulo_2_Mineria_datos\\exp\\KA2001" )
 
 fwrite( dapply[ , list(numero_de_cliente, Predicted) ], #solo los campos para Kaggle
-        file= "./exp/KA2001/K101_001.csv",
+        file= "C:\\Users\\victo\\OneDrive\\Escritorio\\Maestría_Data_Science\\Modulo_2_Mineria_datos\\exp\\KA2001\\K101_020.csv",
         sep=  "," )
